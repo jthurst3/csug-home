@@ -4,7 +4,7 @@ body, html {
     background: #ccc url('/images/home-tile.gif') repeat fixed;
 }
 
-div.centered > a > img {
+img#logo {
     border-bottom: 5px solid #ddd;
 }
 
@@ -61,6 +61,7 @@ a.linkback:hover {
 }
 
 a.linkback img {
+    border: none;
     padding: 5px;
     vertical-align: middle;
 }
