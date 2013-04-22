@@ -1,0 +1,3 @@
+Redirect 301 /u/nbook/csug-comps/csug-comps.html /u/nbook/csug.html
+RedirectMatch 301 /u/nbook/csug-comps/(.*) /u/nbook/csug//$1
+

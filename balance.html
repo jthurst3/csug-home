@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nate Book - University of Rochester Declining Balance</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript">
+        </script>
+        <script type="text/javascript">
+(function () {
+    $(document).ajaxStart(function() {
+        $('#result').html('<img src="http://www.tommoody.us/images/jul11/burgle-op45a.gif" alt="loading" />');
+    });
+    $(document).ready(function () {
+        var status = 0;
+        $('#balance').on('submit', function () {
+            if (status != 0) return false;
+            status = 1;
+            $('#result').slideDown();
+            $.ajax({
+                data: 'netid=' + encodeURIComponent($('#balance > #netid').val()) + '&pass=' + encodeURIComponent($('#balance > #pass').val()),
+                type: 'POST',
+                url: 'https://csug.rochester.edu/u/nbook/bbtools/balance.php?get_hist=1&as_html=1'
+            }).success(function (data, status, xhr) {
+                $('#result').html(data);
+            });
+            return false;
+        });
+    });
+})();
+        </script>
+    </head>
+    <body>
+        <div class="centered">
+            <a href="http://cs.rochester.edu/"><img align="top" src="https://www.cs.rochester.edu/sites/all/themes/urcs/urcs-banner.png" /></a>
+            <div class="content">
+                <h1>University of Rochester Declining Balance</h1>
+                <h2>Get Declining &amp; Flex Balances through Blackboard/Sequoia</h2>
+            </div>
+            <div class="content">
+                <form id="balance" onsubmit="return false;">
+                    <label for="netid">Net ID:</label>
+                    <input type="text" id="netid" name="netid">
+                    <label for="pass">Password:</label>
+                    <input type="password" id="pass" name="pass">
+                    <input type="submit" name="submit" value="submit">
+                </form>
+            </div>
+            <div class="content" id="result">
+            </div>
+            <a class="linkback" href="/u/nbook/"><img src="/images/up.gif" /><span>Back to Nate's Page</span></a>
+        </div>
+    </body>
+</html>
