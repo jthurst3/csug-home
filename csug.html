@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nate Book - Computer Science Undergrad Network Status Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel="stylesheet" type="text/css" href="csug/status.php.css" />
+        <style>
+div.layout_container {
+    width: 800px;
+    margin: 0px auto;
+}
+
+div.layout {
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid #cccccc;
+    vertical-align: middle;
+    text-align: center;
+}
+
+div.comp > p {
+    margin-top: 24px;
+}
+
+div.printer > p {
+    margin-top: 10px;
+}
+
+div.camera > p {
+    margin-left: -30px;
+    margin-top: 15px;
+}
+
+div.vspl {
+    border: none;
+    width: 100px;
+    height: 125px;
+}
+
+div.printer {
+    margin-left: 15px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+div.comp {
+    width: 64px;
+    height: 64px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+div.camera {
+    width: 5px;
+    height: 5px;
+    margin: 20px;
+    cursor: pointer;
+}
+
+div.spc {
+    width: 65px;
+    height: 65px;
+    margin: 10px;
+    border: none;
+}
+
+div.board {
+    width: 5px;
+    height: 100px;
+    margin-left: -5px;
+}
+
+div.door {
+    width: 50px;
+    height: 5px;
+    margin-bottom: 30px;
+}
+
+div.wboard {
+    width: 300px;
+    height: 5px;
+    margin-bottom: 30px;
+}
+
+div.table {
+    width: 125px;
+    height: 50px;
+    margin-left: 100px;
+}
+
+div.couch {
+    width: 115px;
+    height: 45px;
+}
+
+div#infobox {
+    display: none;
+    position: absolute;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    right: auto;
+    padding: 15px;
+    margin: 1em 0 3em;
+    color: #000;
+    background: #999; /* default background for browsers without gradient support */
+    /* css3 */
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#999));
+    background: -moz-linear-gradient(#eee, #999);
+    background: -o-linear-gradient(#eee, #999);
+    background: linear-gradient(#eee, #999);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 16px #444;
+}
+
+div#infobox:before {
+    content: "";
+    position: absolute;
+    border-style: solid;
+    top: auto; /* value = - border-top-width - border-bottom-width */
+    right: auto; /* controls horizontal position */
+    bottom: -15px;
+    left: 10px;
+    border-width: 15px 15px 0; /* vary these values to change the angle of the vertex */
+    border-color: #999 transparent;
+
+    /* reduce the damage in FF3.0 */
+    display: block; 
+    width: 0;
+}
+
+div#infobox ul {
+    margin: 1em 0.5em 0 0;
+    padding: 0 0 0 1.5em;
+    list-style: disc outside none;
+}
+
+div#infobox ul ul {
+    margin: 0;
+    padding: 0 0 0 3em;
+    list-style: circle outside none;
+}
+
+
+div#infobox span.offline {
+    color: red;
+    font-weight: bold;
+}
+
+div#infobox span.online {
+    color: green;
+}
+
+
+div#infobox > p.tools {
+    display: block;
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+div#infobox > p.tools > span {
+    display: inline-block;
+    font-weight: bold;
+    margin: 3px;
+    padding: 5px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+div#infobox > p.tools > span:hover {
+    text-decoration: underline;
+    box-shadow: 2px 2px 1px #444;
+    border: 1px solid #444;
+}
+
+div#infobox > p.tools > span:active {
+    box-shadow: -2px -2px 1px #444;
+    background: #888;
+}
+        </style>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+        </script>
+        <script type="text/javascript">
+(function () {
+    $(document).ready(function () {
+        var hideTimeout = null;
+        var refreshTimeout = null;
+        var cached = [];
+        var current = null;
+        $('.comp, .printer, .camera').on('mouseover click', function () {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+            if (refreshTimeout) {
+                clearTimeout(refreshTimeout);
+                refreshTimeout = null;
+            }
+            current = $(this);
+            var off = current.offset();
+            var id = current.attr('id');
+            if (cached[id]) {
+                if (cached[id].ready) {
+                    var timeUntilRefresh = 60000 - (new Date().getTime() - cached[id].time);
+                    if (timeUntilRefresh > 0) {
+                        //$('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                        $('#infobox > p.remote').html(cached[id].data);
+                        $('#infobox').show();
+                        var h = $('#infobox').outerHeight();
+                        $('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                        refreshTimeout = setTimeout(function () {
+                            infoboxRequest();
+                        },timeUntilRefresh);
+                    } else {
+                        infoboxRequest();
+                    }
+                }
+                //} else { else: the ajax is currently working
+            } else {
+                infoboxRequest();
+            }
+        });
+        $('#infobox').on('mouseover', function () {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+        });
+        $('.comp, .printer, .camera, #infobox').on('mouseout', function () {
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+            hideTimeout = setTimeout(function () {
+                current = null;
+                $('#infobox').fadeOut();
+                if (refreshTimeout) {
+                    clearTimeout(refreshTimeout);
+                    refreshTimeout = null;
+                }
+            },5000);
+        });
+        $('#infobox #close').on('click', function () {
+            current = null;
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+                hideTimeout = null;
+            }
+            if (refreshTimeout) {
+                clearTimeout(refreshTimeout);
+                refreshTimeout = null;
+            }
+            $('#infobox').fadeOut();
+        });
+        $('#infobox #refresh').on('click', function () {
+            infoboxRequest();
+        });
+
+        var infoboxRequest = function () {
+            if (current == null) return;
+            var id = current.attr('id');
+            var off = current.offset();
+            cached[id] = {ready: false};
+            $.ajax({
+                url: 'csug/infobox.php?id=' + id,
+                cache: false,
+                beforeSend: function ( xhr ) {
+                    xhr.overrideMimeType("text/plain; charset=x-user-defined");
+                }
+            }).done(function (data) {
+                //$('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                $('#infobox > p.remote').html(data);
+                if (data.indexOf('<img') > 0) {
+                    $('#infobox img').load(function () {
+                        $('#infobox').show();
+                        var h = $('#infobox').outerHeight();
+                        $('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                        cached[id] = {data: data, ready: true, time: new Date().getTime()};
+                        refreshTimeout = setTimeout(function () {
+                            infoboxRequest();
+                        },60000);
+                    });
+                } else {
+                    $('#infobox').show();
+                    var h = $('#infobox').outerHeight();
+                    $('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                    cached[id] = {data: data, ready: true, time: new Date().getTime()};
+                    refreshTimeout = setTimeout(function () {
+                        infoboxRequest();
+                    },60000);
+                }
+            }).fail(function (xhr, status, error) {
+                $('#infobox > p.remote').html('<span class="offline">Request error: '+status+'</span>');
+                $('#infobox').show();
+                var h = $('#infobox').outerHeight();
+                $('#infobox').offset({ top: off.top - h - 20, left: off.left });
+                cached[id] = {data: null, ready: true, time: 0}; // store a cache entry saying that it expired
+            });
+        };
+    });
+})();
+        </script>
+    </head>
+    <body>
+        <div id="infobox"><p class="tools"><span id="refresh" title="refresh">&#8635;</span><span id="close" title="close">&times;</span></p><p class="remote">itext</p></div>
+        <div class="centered">
+            <a href="http://cs.rochester.edu/"><img align="top" src="http://www.cs.rochester.edu/sites/all/themes/urcs/urcs-banner.png" /></a>
+            <div class="content">
+                <h1>Computer Science Undergrad Network Status Page</h1>
+                <h2>csug.rochester.edu</h2>
+            </div>
+            <div class="content">
+                <h2>West Lab (Majors Lab, CSB 633)</h2>
+                <div class="layout_container">
+                    <div class="layout camera" id="cam_west_cam_2"><p>west_cam_2</p></div>
+                    <div class="layout comp" id="box_tabletop"><p>tabletop</p></div>
+                    <div class="layout comp" id="box_blake"><p>blake</p></div>
+                    <div class="layout comp" id="box_macomb"><p>macomb</p></div>
+                    <div class="layout comp" id="box_cascade"><p>cascade</p></div>
+                    <div class="layout comp" id="box_phelps"><p>phelps</p></div>
+                    <div class="layout comp" id="box_colden"><p>colden</p></div>
+                    <div class="layout camera" id="cam_west_cam_1"><p>west_cam_1</p></div>
+                    <br />
+                    <div class="layout board"><p>chalk board</p></div>
+                    <div class="layout spc"></div>
+                    <div class="layout table"><p>table</p></div>
+                    <div class="layout couch"><p>couch</p></div>
+                    <div class="layout spc"></div>
+                    <div class="layout vspl">
+                        <div class="layout printer" id="prn_west"><p>west</p></div>
+                        <br />
+                        <div class="layout comp" id="box_porter"><p>porter</p></div>
+                    </div>
+                    <br />
+                    <div class="layout spc"></div>
+                    <div class="layout spc"></div>
+                    <div class="layout comp" id="box_sawteeth"><p>sawteeth</p></div>
+                    <div class="layout comp" id="box_nye"><p>nye</p></div>
+                    <div class="layout comp" id="box_seward"><p>seward</p></div>
+                    <div class="layout comp" id="box_marcy"><p>marcy</p></div>
+                    <br />
+                    <div class="layout door"><p>door</p></div>
+                    <div class="layout wboard"><p>white board</p></div>
+                </div>
+            </div>
+            <div class="content">
+                <h2>Inner Lab (Non-Majors Lab, Hylan 301)</h2>
+                <div class="layout_container">
+                    <div class="layout comp" id="box_skylight"><p>skylight</p></div>
+                    <div class="layout comp" id="box_armstrong"><p>armstrong</p></div>
+                    <div class="layout comp" id="box_cliff"><p>cliff</p></div>
+                    <div class="layout comp" id="box_gothics"><p>gothics</p></div>
+                    <div class="layout comp" id="box_hough"><p>hough</p></div>
+                    <div class="layout comp" id="box_haystack"><p>haystack</p></div>
+                    <div class="layout comp" id="box_iroquois"><p>iroquois</p></div>
+                    <div class="layout comp" id="box_colvin"><p>colvin</p></div>
+                    <br />
+                    <div class="layout board"><p>white board</p></div>
+                    <div class="layout spc"></div>
+                    <div class="layout spc"></div>
+                    <div class="layout table"><p>table</p></div>
+                    <div class="layout spc"></div>
+                    <div class="layout spc"></div>
+                    <div class="layout vspl">
+                        <div class="layout camera" id="cam_inner_cam_3"><p>inner_cam_3</p></div>
+                        <div class="layout printer" id="prn_inner"><p>inner</p></div>
+                    </div>
+                    <br />
+                    <div class="layout spc"></div>
+                    <div class="layout spc"></div>
+                    <div class="layout comp" id="box_marshall"><p>marshall</p></div>
+                    <div class="layout comp" id="box_redfield"><p>redfield</p></div>
+                    <div class="layout comp" id="box_wright"><p>wright</p></div>
+                    <div class="layout comp" id="box_algonquin"><p>algonquin</p></div>
+                    <div class="layout comp" id="box_panther"><p>panther</p></div>
+                    <div class="layout comp" id="box_whiteface"><p>whiteface</p></div>
+                    <br />
+                    <div class="layout door"><p>door</p></div>
+                </div>
+            </div>
+            <div class="content">
+                <h2>Other Computers</h2>
+                <div class="layout comp" id="box_cycle1"><p>cycle1</p></div>
+                <div class="layout comp" id="box_cycle2"><p>cycle2</p></div>
+                <div class="layout comp" id="box_cycle3"><p>cycle3</p></div>
+                <div class="layout comp" id="box_utility1"><p>utility1</p></div>
+                <div class="layout comp" id="box_hoover"><p>hoover</p></div>
+                <div class="layout comp" id="box_niagara1"><p>niagara1</p></div>
+                <div class="layout comp" id="box_niagara2"><p>niagara2</p></div>
+                <div class="layout comp" id="box_door"><p>door</p></div>
+            </div>
+            <a class="linkback" href="/u/nbook/"><img src="/images/up.gif" /><span>Back to Nate's Page</span></a>
+        </div>
+    </body>
+</html>
