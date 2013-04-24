@@ -1,0 +1,6 @@
+[submodule "bbtools"]
+	path = bbtools
+	url = git@github.com:RocHack/bbtools.git
+[submodule "csugnet"]
+	path = csugnet
+	url = git@github.com:RocHack/csugnet.git

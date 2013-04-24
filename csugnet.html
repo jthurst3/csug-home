@@ -3,7 +3,7 @@
     <head>
         <title>Nate Book - Computer Science Undergrad Network Status Page</title>
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <link rel="stylesheet" type="text/css" href="csug/status.php.css" />
+        <link rel="stylesheet" type="text/css" href="csugnet/status.php.css" />
         <style>
 div.layout_container {
     width: 800px;
@@ -178,7 +178,6 @@ div#infobox > p.tools > span {
 }
 
 div#infobox > p.tools > span:hover {
-    text-decoration: underline;
     box-shadow: 2px 2px 1px #444;
     border: 1px solid #444;
 }
@@ -272,7 +271,7 @@ div#infobox > p.tools > span:active {
             var off = current.offset();
             cached[id] = {ready: false};
             $.ajax({
-                url: 'csug/infobox.php?id=' + id,
+                url: 'csugnet/infobox.php?id=' + id,
                 cache: false,
                 beforeSend: function ( xhr ) {
                     xhr.overrideMimeType("text/plain; charset=x-user-defined");
