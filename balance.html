@@ -3,29 +3,128 @@
     <head>
         <title>Nate Book - University of Rochester Declining Balance</title>
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript">
+        <style>
+div#result {
+    display: none;
+}
+
+p.error {
+    font-weight: bold;
+    color: red;
+}
+
+p.info {
+    color: green;
+}
+
+table {
+    width: 100%;
+    text-align: right;
+}
+
+table#balance {
+    width: 50%;
+    margin-left: 50%;
+}
+
+div.prog {
+    width: 810px;
+    height: 35px;
+    margin: 10px;
+    padding: 0;
+    background: #bbb;
+    border: none;
+}
+
+div.prog > div.bar {
+    width: 0;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#6f6), to(#060));
+    background: -moz-linear-gradient(#6f6, #060);
+    background: -o-linear-gradient(#6f6, #060);
+    background: linear-gradient(#6f6, #060);
+}
+        </style>
+        <script src="jquery.min.js" type="text/javascript">
+        </script>
+        <script src="d3.v3.min.js" type="text/javascript">
         </script>
         <script type="text/javascript">
 (function () {
-    $(document).ajaxStart(function() {
-        $('#result').html('<img src="http://www.tommoody.us/images/jul11/burgle-op45a.gif" alt="loading" />');
-    });
+    var step = 0;
+    var total = 0;
+    var text = '';
+    
+    var updateProgressBar = function () {
+        $('#result').html('<div class="prog"><div class="bar"></div></div><p>' + text + '</p>');
+        if (total > 0) {
+            $('#result .prog > .bar').css({ width: Math.round(step / total * 100) + '%' });
+        }
+    }
+
     $(document).ready(function () {
-        var status = 0;
         $('#balance').on('submit', function () {
-            if (status != 0) return false;
-            status = 1;
+            if (step > 0) return false;
+            step = 1;
+            total = 10;
+            text = 'Logging in to Blackboard...';
+            updateProgressBar();
             $('#result').slideDown();
-            $.ajax({
-                data: 'netid=' + encodeURIComponent($('#balance > #netid').val()) + '&pass=' + encodeURIComponent($('#balance > #pass').val()),
-                type: 'POST',
-                url: 'https://csug.rochester.edu/u/nbook/bbtools/balance.php?get_hist=1&as_html=1'
-            }).success(function (data, status, xhr) {
-                $('#result').html(data);
-            });
+            var stepRequest = function () {
+                $.ajax({
+                    data: 'netid=' + encodeURIComponent($('#balance > #netid').val()) + (step == 1 ? '&pass=' + encodeURIComponent($('#balance > #pass').val()) : ''),
+                    type: 'POST',
+                    url: 'https://csug.rochester.edu/u/nbook/bbtools/balance.php?get_hist=1&step=' + step
+                }).success(function (data, status, xhr) {
+                    try {
+                        var json = $.parseJSON(data);
+                        if (json.result == 400) {
+                            step = 0;
+                            //updateProgressBar();
+                            $('#result').html('<p class="error">Error from server: ' + json.error + '</p>');
+                        } else if (json.result == 200 && json.step == json.total) {
+                            step = 0;
+                            //updateProgressBar();
+                            $('#result').html(parse(json));
+                        } else if (json.result == 100) {
+                            step = json.step;
+                            total = json.total;
+                            text = json.progtext;
+                            updateProgressBar();
+                            stepRequest();
+                        }
+                    } catch (ex) {
+                        step = 0;
+                        //updateProgressBar();
+                        $('#result').html('<p class="error">Error parsing response: ' + ex + '</p>');
+                    }
+                }).fail(function (xhr, status, error) {
+                    step = 0;
+                    //updateProgressBar();
+                    $('#result').html('<p class="error">Error communicating with server: ' + error + '</p>');
+                });
+            };
+            stepRequest();
             return false;
         });
     });
+
+    function parse(json) {
+        var html =  '<table id="balance"><thead><tr><th>Account</th><th>Balance</th></tr></thead><tbody>';
+        for (var i in json.accounts) {
+            var account = json.accounts[i];
+            html += '<tr><td>' + account.name + '</td><td>' + account.amount + '</td></tr>';
+        }
+        html += '</tbody></table>';
+        html += '<table id="history"><thead><th>Time</th><th>Location</th><th>Account</th><th>Type</th><th>Change</th></thead><tbody>';
+        for (var i in json.history) {
+            var trans = json.history[i];
+            html += '<tr><td>' + trans.time + '</td><td>' + trans.location + '</td><td>' + trans.account + '</td><td>' + trans.type + '</td><td>' + trans.amount + '</td></tr>';
+        }
+        return html;
+    }
 })();
         </script>
     </head>
