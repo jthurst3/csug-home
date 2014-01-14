@@ -3,4 +3,7 @@
 	url = git@github.com:RocHack/bbtools.git
 [submodule "csugnet"]
 	path = csugnet
-	url = git@github.com:RocHack/csugnet.git
+    url = git@github.com:RocHack/csugnet.git
+[submodule "csug-tutoring"]
+    path = csug-tutoring
+    url = git@github.com:nmbook/csug-tutoring.git

@@ -1,4 +1,5 @@
 Redirect 301 /u/nbook/csug-comps/csug-comps.html /u/nbook/csugnet.html
 Redirect 301 /u/nbook/csug.html /u/nbook/csugnet.html
-RedirectMatch 301 /u/nbook/csug-comps/(.*) /u/nbook/csugnet//$1
+RedirectMatch 301 /u/nbook/csug-comps/(.*) /u/nbook/csugnet/$1
+RedirectMatch 301 /users/ugrads/nbook/(.*) /u/nbook/$1
 
