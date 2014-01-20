@@ -5,55 +5,47 @@ body, html {
 }
 
 img#logo {
-    border-bottom: 5px solid #ddd;
+    border-bottom: .5em solid #ddd;
 }
 
 div.centered {
-    margin: 0px auto;
+    margin: 0 auto;
     background-color: white;
     width: 860px;
 }
 
 div.content {
-    border-bottom: 5px solid #ddd;
-    padding: 15px;
+    border-bottom: .5em solid #ddd;
+    padding: 1em;
 }
 
 h1 {
-    font-size: 20pt;
+    font-size: 2em;
 }
 
 h1 small {
-    font-size: 15pt;
+    font-size: 1.5em;
 }
 
 h2 {
-    font-size: 15pt;
+    font-size: 1.5em;
 }
 
 h4 {
-    font-size: 12pt;
+    font-size: 1.1em;
     padding: 0;
     margin: 0;
 }
 
 a.linkback {
     background: #5324fd;
-    height: 56px;
+    height: 4em;
     display: block;
-    font-size: 12pt;
+    font-size: 1em;
     font-weight: bold;
     text-decoration: none;
     color: white;
-    border-bottom: 5px solid #ddd;
-}
-
-hr {
-    height: 5px;
-    width: 100%;
-    max-height: 0px;
-    border: 2.5px solid #ddd;
-    margin: -10px auto;
+    border-bottom: .5em solid #ddd;
 }
 
 a.linkback:hover {
@@ -62,11 +54,11 @@ a.linkback:hover {
 
 a.linkback img {
     border: none;
-    padding: 5px;
+    padding: .5em;
     vertical-align: middle;
 }
 
 a.linkback span {
-    padding-left: 15px;
+    padding-left: 1.5em;
 }
 
