@@ -2,7 +2,7 @@
 	path = bbtools
 	url = git@github.com:RocHack/bbtools.git
 [submodule "csugnet"]
-	path = csugnet
+	path = netsp
     url = git@github.com:RocHack/csugnet.git
 [submodule "csug-tutoring"]
     path = csug-tutoring
