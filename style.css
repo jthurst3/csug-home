@@ -6,15 +6,28 @@ body, html {
 
 img#logo {
     border-bottom: .5em solid #ddd;
+    float: right;
+}
+
+div#hajim_header {
+    background-color: transparent;
+    background-image: url('hajim-header-background.png');
+    width: 960px;
+    margin: auto;
+}
+
+div#hajim_header img {
+    float: left;
 }
 
 div.centered {
     margin: 0 auto;
-    background-color: white;
-    width: 860px;
+    background-color: transparent;
+    width: 960px;
 }
 
 div.content {
+    background-color: white;
     border-bottom: .5em solid #ddd;
     padding: 1em;
 }
