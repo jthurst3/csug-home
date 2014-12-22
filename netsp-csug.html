@@ -1,25 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- from http://stackoverflow.com/questions/5411538/how-to-redirect-from-an-html-page -->
+<html lang="en-US">
     <head>
-        <title>Nate Book - CSUG Network Status Page</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <link rel="stylesheet" type="text/css" href="netsp/style.css" />
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="1;url=http://csug.rochester.edu/ugc/netsp-csug.html">
+        <script type="text/javascript">
+            window.location.href = "http://csug.rochester.edu/ugc/netsp-csug.html"
+        </script>
+        <title>Page Redirection</title>
     </head>
     <body>
-        <div class="centered">
-            <div id="hajim_header">
-                <img alt="Hajim School of Engineering and Applied Sciences" src="hajim-header-logo.png" />
-                <a href="http://www.cs.rochester.edu/">
-                    <img id="logo" alt="Department of Computer Science" src="hajim-urcs-title.png" />
-                </a>
-                <br clear="all" />
-            </div>
-            <div class="netsp" id="netsp-link" data-folder="csug"></div>
-            <a class="linkback" href="/u/nbook/"><img src="/images/up.gif" alt="Up" /><span>Back to Nate's Page</span></a>
-        </div>
-        <script type="text/javascript" src="jquery.min.js"></script>
-        <script type="text/javascript" src="netsp/netsp.js"></script>
+        <!-- Note: don't tell people to `click` the link, just tell them that it is a link. -->
+        If you are looking for the CSUG Network Status Page and are not redirected automatically, it now lives <a href='http://csug.rochester.edu/ugc/netsp-csug.html'>here</a>.
     </body>
 </html>
-
