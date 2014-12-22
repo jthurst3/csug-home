@@ -1,9 +1,6 @@
 [submodule "bbtools"]
 	path = bbtools
 	url = git@github.com:RocHack/bbtools.git
-[submodule "netsp"]
-	path = netsp
-    url = git@github.com:RocHack/netsp.git
 [submodule "csug-tutoring"]
     path = csug-tutoring
     url = git@github.com:jthurst3/csug-tutoring.git
