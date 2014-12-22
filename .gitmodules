@@ -6,4 +6,4 @@
     url = git@github.com:RocHack/netsp.git
 [submodule "csug-tutoring"]
     path = csug-tutoring
-    url = git@github.com:nmbook/csug-tutoring.git
+    url = git@github.com:jthurst3/csug-tutoring.git
